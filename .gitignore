@@ -1,0 +1,6 @@
+env
+*.DS_Store
+*.pyc
+__pycache__
+db
+largescale_final_project/largescale_final_project/secrets.py
