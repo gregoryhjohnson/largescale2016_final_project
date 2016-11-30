@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'renting_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,18 +68,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'largescale_final_project.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.mysql',
-    'OPTIONS': {
-      'read_default_file': os.path.join(BASE_DIR, '..', '..', 'db', 'my.cnf'),
-    },
-  }
-}
 
 
 # Password validation
