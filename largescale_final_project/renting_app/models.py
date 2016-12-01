@@ -9,6 +9,7 @@ class Profile(models.Model):
   first_name = models.CharField(max_length=32)
   last_name = models.CharField(max_length=32)
   zip_code = models.CharField(max_length=16)
+  registered_date = models.DateField(auto_now_add=True)
 
 class Category(models.Model):
   name = models.CharField(max_length=32)
@@ -21,6 +22,7 @@ class Item(models.Model):
   description = models.TextField()
   asking_price = models.DecimalField(max_digits=9, decimal_places=2)
   currently_rented = models.BooleanField()
+  listed_date = models.DateField(auto_now_add=True)
 
 class Rental(models.Model):
   user_id = models.BigIntegerField(db_index=True)
