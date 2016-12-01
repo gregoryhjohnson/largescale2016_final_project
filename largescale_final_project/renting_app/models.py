@@ -10,14 +10,14 @@ class Profile(models.Model):
   last_name = models.CharField(max_length=32)
   zip_code = models.CharField(max_length=16)
 
-#class Category(models.Model):
- # name = models.CharField(max_length=32)
-  #parent_category = models.ForeignKey('self')
+class Category(models.Model):
+  name = models.CharField(max_length=32)
+  parent_category = models.ForeignKey('self')
 
 class Item(models.Model):
   user_id = models.BigIntegerField(db_index=True)
   name = models.CharField(max_length=32)
-  #category = models.ForeignKey('Category')
+  category = models.ForeignKey('Category')
   description = models.TextField()
   asking_price = models.DecimalField(max_digits=9, decimal_places=2)
   currently_rented = models.BooleanField()

@@ -46,6 +46,9 @@ class UserRouter(object):
     return self.db_for_read_write(model, **hints)
 
   def db_for_write(self, model, **hints):
+    #Save all categories to the "master" db (db1), will be replicated across all dbs
+    if model._meta.model_name == "Category":
+      return "db1"   
     return self.db_for_read_write(model, **hints)
 
   def allow_relations(self, obj1, obj2, **hints):
@@ -55,3 +58,4 @@ class UserRouter(object):
   
   def allow_migrate(self, db, app_label, model=None, **hints):
     return True
+
