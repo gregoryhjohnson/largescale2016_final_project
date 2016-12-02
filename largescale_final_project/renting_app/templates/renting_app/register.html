@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="/renting_app/register/" method="post">
+<table>
+{% csrf_token %}
+{{ user_form.as_table }}
+{{ profile_form.as_table }}
+</table>
+<input type="submit" value="Register">
+</form>
+{% endblock %}

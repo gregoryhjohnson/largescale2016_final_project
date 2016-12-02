@@ -1,15 +1,36 @@
 from __future__ import unicode_literals
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from django.db import models
 
 # Create your models here.
 class Profile(models.Model):
   user_id = models.BigIntegerField(primary_key=True)
+  username = models.CharField(max_length=32, unique=True)
   email = models.CharField(max_length=32, unique=True)
   first_name = models.CharField(max_length=32)
   last_name = models.CharField(max_length=32)
   zip_code = models.CharField(max_length=16)
-  registered_date = models.DateField(auto_now_add=True)
+  registered_date = models.DateTimeField(auto_now_add=True)
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+      print("new user created, creating new profile")
+      Profile.objects.create(user_id=instance.id, email=instance.email,
+          username= instance.username, first_name = instance.first_name,
+          last_name = instance.last_name)
+        
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    profile = Profile.objects.get(pk=instance.id)
+    #Force profile to reflect changes made to these fields User, note: username cannot be changed
+    profile.email=instance.email
+    profile.first_name = instance.first_name
+    profile.last_name = instance.last_name
+    profile.save()
 
 class Category(models.Model):
   name = models.CharField(max_length=32)
