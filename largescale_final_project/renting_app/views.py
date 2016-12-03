@@ -2,10 +2,18 @@ from django.shortcuts import render
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.forms import AuthenticationForm
 from .models import *
 from .forms import ExtendedUserCreationForm,ProfileForm
 
 # Create your views here.
+
+#Index for users who are not logged in
+def index(request):
+  if request.user.is_authenticated():
+    return home(request)
+  
+  return HttpResponse('<h1>You are not logged in<h1>')
 
 @login_required
 def home(request):
@@ -47,6 +55,22 @@ def register(request):
   }) 
 
 def user_login(request):
-  #TODO
-  return HttpResponse("Not Implemented")
+  #If already logged in just redirect to home page
+  if request.user.is_authenticated():
+    return HttpResponseRedirect('/renting_app')
 
+  if request.method == 'POST':
+    auth_form = AuthenticationForm(data=request.POST)
+
+    if auth_form.is_valid():
+      login(request, auth_form.get_user())
+      return HttpResponseRedirect('/renting_app/')
+
+  auth_form = AuthenticationForm
+  return render(request, 'renting_app/login.html', {
+    'auth_form': auth_form,
+  })
+  
+def user_logout(request):
+  logout(request)
+  return HttpResponseRedirect('/renting_app/')
