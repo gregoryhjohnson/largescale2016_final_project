@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<form action="/renting_app/register/" method="post">
+<form action="/renting_app/register/" method="post" class="form-horizontal">
 <table>
 {% csrf_token %}
 {{ user_form.as_table }}
