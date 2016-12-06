@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="/renting_app/add-item/" method="post">
+<table>
+{% csrf_token %}
+{{ item_form.as_table }}
+</table><br>
+<input type="submit" value="Add Item" class="btn btn-primary">
+</form>
+{% endblock %}

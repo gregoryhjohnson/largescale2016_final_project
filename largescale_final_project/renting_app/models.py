@@ -15,6 +15,10 @@ class Profile(models.Model):
   zip_code = models.CharField(max_length=16)
   registered_date = models.DateTimeField(auto_now_add=True)
 
+  def __str__(self):
+    return self.username
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -36,6 +40,9 @@ class Category(models.Model):
   name = models.CharField(max_length=32)
   parent_category = models.ForeignKey('self')
 
+  def __str__(self):
+    return self.name
+
 class Item(models.Model):
   user_id = models.BigIntegerField(db_index=True)
   name = models.CharField(max_length=32)
@@ -44,6 +51,7 @@ class Item(models.Model):
   asking_price = models.DecimalField(max_digits=9, decimal_places=2)
   currently_rented = models.BooleanField()
   listed_date = models.DateField(auto_now_add=True)
+  
 
 class Rental(models.Model):
   user_id = models.BigIntegerField(db_index=True)

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{user}}'s Profile:</h1>
+<br>
+Name: {{first_name}} {{last_name}}
+<br>
+Email: {{email}}
+<br>
+Zip code: {{zip_code}}
+<br>
+{% if posts %}
+<hr>
+<h4>Items listed: </h4><br>
+<form action="/renting_app/modify/" method="post">
+{% csrf_token %}
+{% for item in posts %}
+  <div class="item">
+      <h3><bold> 
+          <a href="{% url 'item' item.id %}">
+          {{ item.name }}
+          </a>
+      </bold></h3>
+      <h4>Category: {{ item.category.name }}</h4>
+          <p>Description: {{ item.description }}</p>
+          <p>Asking Price per day: ${{ item.asking_price }}</p>
+        
+          {% if item.currently_rented %}
+          <h4 style="color:red">Item is currently being rented</h4><hr>
+          <input type="checkbox" value="{{item.id}}" name="returned">Item was returned<br>
+          <input type="checkbox" value="{{item.id}}" name="delete">  Delete listing
+          {% else %}
+          {% if my_profile %}
+          <hr>
+          
+          <input type="checkbox" value="{{item.id}}" name="rented">Mark as currently being rented<br> 
+          <input type="checkbox" value="{{item.id}}" name="delete">  Delete listing
+          {% endif %}
+          {% endif %}
+          
+
+      </div>
+{% endfor %}
+{% endif %}
+<br>
+{% if my_profile %}
+<button type="reset" class="btn pull-right">Reset</button>   
+<button type="submit" class="btn btn-primary pull-right">Apply</button>
+{% endif %}
+<br><hr>
+</form>
+
+{% endblock %}
