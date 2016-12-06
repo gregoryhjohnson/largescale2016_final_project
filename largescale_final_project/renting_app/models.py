@@ -29,7 +29,10 @@ def create_user_profile(sender, instance, created, **kwargs):
         
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    profile = Profile.objects.get(pk=instance.id)
+    #Tag query with user_id for routing
+    profile_query = Profile.objects
+    profile_query._hints = {'user_id' : instance.id}
+    profile = profile_query.get(pk=instance.id)
     #Force profile to reflect changes made to these fields User, note: username cannot be changed
     profile.email=instance.email
     profile.first_name = instance.first_name

@@ -99,7 +99,11 @@ def profile(request, user_id):
   user = User.objects.get(pk=user_id)
   profile = Profile.objects.get(pk=user_id)
 
-  items = Item.objects.filter(user_id=user_id).order_by('-listed_date')
+  #Tag query with user_if for db routing
+  item_query = Item.objects
+  item_query._hints = {'user_id' : user_id}
+
+  items = item_query.filter(user_id=user_id).order_by('-listed_date')
   paginator = Paginator(items, 10)
   page = request.GET.get('page')
   try:
