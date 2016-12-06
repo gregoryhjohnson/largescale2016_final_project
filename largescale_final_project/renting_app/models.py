@@ -38,7 +38,7 @@ def save_user_profile(sender, instance, **kwargs):
 
 class Category(models.Model):
   name = models.CharField(max_length=32)
-  parent_category = models.ForeignKey('self')
+  parent_category = models.ForeignKey('self', null=True)
 
   def __str__(self):
     return self.name
