@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+Hello, {{user}}<br><br>
+{% if item_list %}
+  <div id="item_list">
+    {% for item in item_list %}
+      <div class="item">
+      <h3><bold> 
+          <a href="{% url 'item' item.id %}">
+          {{ item.name }}
+          </a>
+      </bold></h3>
+      <h4>Category: {{ item.category.name }}</h4>
+          <p>Description: {{ item.description }}</p>
+          <p>Asking Price per day: ${{ item.asking_price }}</p>
+        <p>Listed by:
+          <a href="{% url 'profile' item.user_id %}">
+             {{ item.user }}
+          </a></p>
+          <p>Zip Code: {{item.user.zip_code}}</p>
+
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No posts are available.</p>
+{% endif %}
+
+{% endblock %}

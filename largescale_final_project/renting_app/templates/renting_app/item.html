@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="item_page">
+
+<h3><bold> 
+          
+          {{ item.name }}
+          
+      </bold></h3>
+      <h4>Category: {{ item.category.name }}</h4>
+          <p>Description: {{ item.description }}</p>
+          <p>Asking Price per day: ${{ item.asking_price }}</p>
+          <hr>
+        <p>Listed by:
+          <a href="{% url 'profile' item_user.user_id %}">
+             {{ item_user.username }}
+          </a></p>
+          <p>Zip Code: {{item_user.zip_code}}</p>
+          <br>
+          <p>Contact Email: {{item_user.email}}</p>
+
+</div>
+{% endblock %}
+
+###display username and zip code same way as in home!!!
