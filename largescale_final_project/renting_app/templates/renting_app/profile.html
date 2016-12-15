@@ -16,7 +16,7 @@ Zip code: {{zip_code}}
 {% for item in posts %}
   <div class="item">
       <h3><bold> 
-          <a href="{% url 'item' item.id %}">
+          <a href="{% url 'item' item.user_id item.id %}">
           {{ item.name }}
           </a>
       </bold></h3>

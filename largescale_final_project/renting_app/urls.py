@@ -10,6 +10,6 @@ urlpatterns = [
   url(r'^profile/(?P<user_id>[0-9]+)/$', views.profile, name='profile'),
   url(r'^add-item/$', views.add, name='add-item'),
   url(r'^home/$', views.home, name='home'),
-  url(r'^item/(?P<item_id>[0-9]+)', views.item, name='item'),
+  url(r'^item/(?P<user_id>[0-9]+)/(?P<item_id>[0-9]+)', views.item, name='item'),
   url(r'^modify/$', views.modify, name='modify'),
 ]
