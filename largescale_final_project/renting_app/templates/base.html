@@ -31,14 +31,21 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="nav navbar-nav navbar-left">
                     <li><a href="/renting_app/home">Home</a></li>
+                    {% if user_id %}
                     <li><a href="/renting_app/add-item">List an Item</a></li>
+                    {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                {% if user_id %}
+                    <li><a href="/renting_app/logout">Logout</a></li>
+                  <li><a href="/renting_app/profile/{{ user_id }}">My Profile</a></li>
+                {% else %}
                   <li><a href="/renting_app/register">Register</a></li>
                   <li><a href="/renting_app/login">Login</a></li>
-                  <li><a href="/renting_app/logout">Logout</a></li>
-                  <li><a href="/renting_app/profile/{{ user_id }}">My Profile</a></li>
+                {% endif %}
+                  
                 </ul>
+                }
             </div>
         </div>
     </nav>

@@ -107,7 +107,7 @@ def user_login(request):
   
 def user_logout(request):
   logout(request)
-  return HttpResponseRedirect('/renting_app/home')
+  return HttpResponseRedirect('/renting_app/')
 
 @login_required
 def profile(request, user_id):

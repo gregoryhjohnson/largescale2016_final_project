@@ -58,7 +58,7 @@ class Item(models.Model):
   asking_price = models.DecimalField(max_digits=9, decimal_places=2)
   currently_rented = models.BooleanField()
   listed_date = models.DateField(auto_now_add=True)
-  
+
 
 class Rental(models.Model):
   user_id = models.BigIntegerField(db_index=True)
