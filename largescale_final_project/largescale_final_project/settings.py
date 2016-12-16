@@ -3,8 +3,7 @@
 """
 
 import os
-# from largescale_final_project.secrets import *
-SECRET_KEY = '5#=fje(zd&2%@-x*3s)5v5k6@ipi27_w7e76&y&mdpu76nm2i+'
+from largescale_final_project.secrets import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -102,26 +101,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/renting_app/login'
-
-if 'RDS_DB_NAME' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rental_app',
-        'USER': 'appserver',
-        'PASSWORD': 'foobarzoot',
-        'HOST': 'aap1nfbft5yzor.cnj0nqnsfxth.us-east-1.rds.amazonaws.com',
-        'PORT': '3306',
-        }
-    }
