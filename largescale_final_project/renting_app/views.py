@@ -7,8 +7,16 @@ from .models import *
 from .forms import ExtendedUserCreationForm,ProfileForm, ItemForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
+from .routers import get_num_physical_shards
 
 # Create your views here.
+
+def set_query_hints(query, user_id):
+  if query._hints == None:
+    query._hints = {'user_id' : user_id}
+  else:
+    query._hints['user_id'] = user_id 
+
 
 #Index for users who are not logged in
 def index(request):
@@ -22,9 +30,19 @@ def index(request):
 def home(request):
 
   #TODO: Placeholder. This should be a feed of items related to the user's intrests
-  item_list = Item.objects.filter(currently_rented=False).order_by('-listed_date')
-  for item in item_list:
-    item.user = Profile.objects.get(pk=item.user_id)
+  item_list = []
+
+  #Simply iterate through the count of physical shards, using i as user_id will ensure each db is hit
+  for i in range(get_num_physical_shards()):
+    item_query = Item.objects
+    set_query_hints(item_query, i)
+    query_result = item_query.filter(currently_rented=False).order_by('-listed_date')
+    for item in query_result:
+      user_query = Profile.objects
+      set_query_hints(user_query, item.user_id)
+      item.user = user_query.get(pk=item.user_id)
+
+    item_list = item_list + [item for item in query_result]
 
   context = {
     'item_list': item_list,
@@ -97,9 +115,16 @@ def profile(request, user_id):
     return user_login(request)
 
   user = User.objects.get(pk=user_id)
-  profile = Profile.objects.get(pk=user_id)
+  profile_query = Profile.objects
+  set_query_hints(profile_query, user_id)
+  profile = profile_query.get(pk=user_id)
 
-  items = Item.objects.filter(user_id=user_id).order_by('-listed_date')
+
+  #Tag query with user_if for db routing
+  item_query = Item.objects
+  set_query_hints(item_query, user_id)
+
+  items = item_query.filter(user_id=user_id).order_by('-listed_date')
   paginator = Paginator(items, 10)
   page = request.GET.get('page')
   try:
@@ -135,22 +160,15 @@ def profile(request, user_id):
 def add(request):
   if request.method == 'POST':
     item_form = ItemForm(request.POST)
+    
+    #TODO: can't call item_form.is_valid due to sharding errors, due manual validation    
+    new_item = item_form.save(commit=False)
+    new_item.user_id = request.user.id
+    new_item.currently_rented = False
+    new_item.save()
 
+    return redirect('/renting_app/home/')
 
-
-    if item_form.is_valid():
-      new_item = item_form.save(commit=False)
-      new_item.user_id = request.user.id
-      new_item.currently_rented = False
-      new_item.save()
-
-      return redirect('/renting_app/home/')
-
-    else:
-      
-      return render(request, 'renting_app/add.html',{
-        'item_form': item_form
-      })
 
   else:
    item_form = ItemForm
@@ -183,8 +201,12 @@ def modify(request):
 
 
 @login_required
-def item(request, item_id):
-  item = Item.objects.get(id=item_id)
-  item_user = Profile.objects.get(pk=item.user_id)
+def item(request, user_id, item_id):
+  item_query = Item.objects
+  set_query_hints(item_query, user_id)
+  item = item_query.get(id=item_id)
+  item_user_query = Profile.objects
+  set_query_hints(item_user_query, user_id)
+  item_user=item_user_query.get(pk=item.user_id)
     
   return render(request, 'renting_app/item.html', {'item' : item, 'user_id': request.user.id, "item_user": item_user})

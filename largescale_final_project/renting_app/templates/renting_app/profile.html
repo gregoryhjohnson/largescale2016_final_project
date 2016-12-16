@@ -16,7 +16,7 @@ Zip code: {{zip_code}}
 {% for item in posts %}
   <div class="item">
       <h3><bold> 
-          <a href="{% url 'item' item.id %}">
+          <a href="{% url 'item' item.user_id item.id %}">
           {{ item.name }}
           </a>
       </bold></h3>
@@ -40,12 +40,11 @@ Zip code: {{zip_code}}
 
       </div>
 {% endfor %}
-
+{% endif %}
 <br>
 {% if my_profile %}
 <button type="reset" class="btn pull-right">Reset</button>   
 <button type="submit" class="btn btn-primary pull-right">Apply</button>
-{% endif %}
 {% endif %}
 <br><hr>
 </form>
