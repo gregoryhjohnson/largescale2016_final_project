@@ -4,6 +4,7 @@ import sys
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "largescale_final_project.settings")
+    os.environ.setdefault("RDS_DB_NAME", "rental_app")
     try:
         from django.core.management import execute_from_command_line
     except ImportError:

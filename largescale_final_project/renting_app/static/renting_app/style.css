@@ -1,6 +1,6 @@
 body{
   padding-top: 70px;
-  
+
 }
 
 .item {
@@ -11,8 +11,11 @@ body{
 	margin:15px;
 	width: 500px;
 	vertical-align: top;
-	
+
 }
 
 
-
+#myNavbar {
+  color: #FFC62C;
+  background-color: #41006F;
+}

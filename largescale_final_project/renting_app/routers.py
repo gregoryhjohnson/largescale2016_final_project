@@ -18,6 +18,9 @@ def logical_to_physical(logical_shard):
 def logical_for_user(user_id):
   return user_id % LOGICAL_SHARDS
 
+def get_num_physical_shards():
+  return PHYSICAL_SHARDS
+
 class UserRouter(object):
 
   def db_for_user(self, user_id):
@@ -29,26 +32,30 @@ class UserRouter(object):
  
     db = None
 
-    if 'instance' in hints:
-      print("instance in hints")
-      try:
-        instance = hints['instance']
+    try:
+      instance = hints['instance']
+      if instance.user_id:
         db = self.db_for_user(instance.user_id)
-      except AttributeError:
+    except AttributeError:
         db = self.db_for_user(instance.id)
-    else:
-      db = self.db_for_user(int(hints['user_id']))
+    except KeyError:
+      try:
+        db = self.db_for_user(int(hints['user_id']))
+      except KeyError:
+        print('no instance in hints')
 
-    print ("Using database: " + db)
     return db
 
   def db_for_read(self, model, **hints):
+    if model._meta.model_name == "category":
+      return "auth_db"   
+
     return self.db_for_read_write(model, **hints)
 
   def db_for_write(self, model, **hints):
     #Save all categories to the "master" db (db1), will be replicated across all dbs
-    if model._meta.model_name == "Category":
-      return "db1"   
+    if model._meta.model_name == "category":
+      return "auth_db"   
     return self.db_for_read_write(model, **hints)
 
   def allow_relations(self, obj1, obj2, **hints):
