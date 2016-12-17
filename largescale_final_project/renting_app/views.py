@@ -8,8 +8,10 @@ from .forms import ExtendedUserCreationForm,ProfileForm, ItemForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
 from .routers import get_num_physical_shards
+from django.core.mail import EmailMessage
 
 # Create your views here.
+
 
 def set_query_hints(query, user_id):
   if query._hints == None:
@@ -31,6 +33,7 @@ def home(request):
 
   #TODO: Placeholder. This should be a feed of items related to the user's intrests
   item_list = []
+
 
   #Simply iterate through the count of physical shards, using i as user_id will ensure each db is hit
   for i in range(get_num_physical_shards()):
@@ -208,5 +211,38 @@ def item(request, user_id, item_id):
   item_user_query = Profile.objects
   set_query_hints(item_user_query, user_id)
   item_user=item_user_query.get(pk=item.user_id)
+  show_email_form = True
+  if (request.user.id == item_user.user_id):
+    show_email_form = False
+  context = {
+  'item' : item, 
+  'user_id': request.user.id, 
+  "item_user": item_user,
+  "show_email_form" : show_email_form
+  }
+
+  if request.method == 'POST':
+
+    email_addr = request.POST.get('email')
+    if email_addr == "":
+      email_addr = request.user.email
+    message = request.POST.get('message')
+    item = request.POST.get('item')
+    title = 'New Message about your ' + str(item)
     
-  return render(request, 'renting_app/item.html', {'item' : item, 'user_id': request.user.id, "item_user": item_user})
+    email = EmailMessage(
+      title,
+      message,
+      "renting.app.ls@gmail.com",
+      [item_user.email],
+      reply_to=[email_addr]
+    )
+    email.send()
+    context['message'] = "Your message has been emailed."  
+
+  
+  return render(request, 'renting_app/item.html', context)
+
+
+
+
