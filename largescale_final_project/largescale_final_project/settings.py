@@ -103,3 +103,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/renting_app/login'
+
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = 'renting.app.ls@gmail.com'
+
+#Must generate specific password for your app in [gmail settings][1]
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
+
+#This did the trick
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

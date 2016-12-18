@@ -2,10 +2,10 @@
 {% block content %}
 <div class="item_page">
 
-<h3><bold> 
-          
+<h3><bold>
+
           {{ item.name }}
-          
+
       </bold></h3>
       <h4>Category: {{ item.category.name }}</h4>
           <p>Description: {{ item.description }}</p>
@@ -17,9 +17,27 @@
           </a></p>
           <p>Zip Code: {{item_user.zip_code}}</p>
           <br>
-          <p>Contact Email: {{item_user.email}}</p>
 
+          {% if show_email_form %}
+          <h4>Contact {{ item_user.username }}:</h4>
+          <form action="" method="post" id="request-form">
+          {% csrf_token %}
+          <input value="{{ item.name }}" name="item" id="item" hidden>
+          Your email:
+          <input type="email" id="email" name="email">
+          <small>Leave blank to use email registered with.</small>
+
+          <br><br>
+
+            Message:
+            <textarea name="message" id="message" required></textarea>
+          <br><br>
+          <button type="submit" class="btn btn-primary">Send</button>
+
+        </form>
+
+
+        {{ message }}
+  {% endif %}
 </div>
 {% endblock %}
-
-###display username and zip code same way as in home!!!
