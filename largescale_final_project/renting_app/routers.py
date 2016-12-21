@@ -1,6 +1,6 @@
 LOGICAL_SHARDS = 128
 PHYSICAL_SHARDS = 2
-BASE_DB_NAME = 'db'
+BASE_DB_NAME = 'db' #rental_app
 
 #Helper function to create a mapping from logical to physical shards
 def create_log_to_phy_mapping(logical_shards, physical_shards):
@@ -12,7 +12,7 @@ def create_log_to_phy_mapping(logical_shards, physical_shards):
 
 def logical_to_physical(logical_shard):
   mapping = create_log_to_phy_mapping(LOGICAL_SHARDS, PHYSICAL_SHARDS)
-  
+
   return mapping[logical_shard]
 
 def logical_for_user(user_id):
@@ -29,7 +29,7 @@ class UserRouter(object):
   def db_for_read_write(self, model, **hints):
     if model._meta.app_label == 'auth' or model._meta.app_label == 'sessions':
       return 'auth_db'
- 
+
     db = None
 
     try:
@@ -48,21 +48,20 @@ class UserRouter(object):
 
   def db_for_read(self, model, **hints):
     if model._meta.model_name == "category":
-      return "auth_db"   
+      return "auth_db"
 
     return self.db_for_read_write(model, **hints)
 
   def db_for_write(self, model, **hints):
     #Save all categories to the "master" db (db1), will be replicated across all dbs
     if model._meta.model_name == "category":
-      return "auth_db"   
+      return "auth_db"
     return self.db_for_read_write(model, **hints)
 
   def allow_relations(self, obj1, obj2, **hints):
     if (obj1._meta.app_label == 'auth' and obj2._meta.app_label == 'auth'):
       return True
-    return False 
-  
+    return False
+
   def allow_migrate(self, db, app_label, model=None, **hints):
     return True
-
