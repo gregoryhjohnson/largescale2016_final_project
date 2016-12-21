@@ -9,6 +9,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
 from .routers import get_num_physical_shards
 from django.core.mail import EmailMessage
+from . import renting_pb2
+import grpc
 
 # Create your views here.
 
@@ -170,6 +172,10 @@ def add(request):
     new_item.currently_rented = False
     new_item.save()
 
+    channel = grpc.insecure_channel('localhost:35000')
+    stub = renting_pb2.WhooshSearchStub(channel)
+    completed = stub.Add(renting_pb2.AddRequest(id=new_item.id, item=new_item.name, description=new_item.description))
+
     return redirect('/renting_app/home/')
 
 
@@ -198,6 +204,12 @@ def modify(request):
       item.save()
     for delete_id in delete:
       item = Item.objects.get(id=delete_id)
+
+      #change channel to whatever the server is running on
+      channel = grpc.insecure_channel('localhost:35000')
+      stub = renting_pb2.WhooshSearchStub(channel)
+      completed = stub.Delete(renting_pb2.DeleteRequest(id=int(delete_id)))
+
       item.delete()
     url = '/renting_app/profile/' + str(request.user.id)
     return HttpResponseRedirect(url)
@@ -242,6 +254,29 @@ def item(request, user_id, item_id):
 
   
   return render(request, 'renting_app/item.html', context)
+
+@login_required
+def search(request):
+  query = request.GET.get('query')
+  #change channel to whatever the server is running on
+  channel = grpc.insecure_channel('localhost:35000')
+  stub = renting_pb2.WhooshSearchStub(channel)
+  response = stub.Search(renting_pb2.SearchRequest(query=query))
+  top_hit_ids = response.hit_id
+  top_hits = []
+  if len(top_hit_ids) > 0:
+    for id in top_hit_ids:
+      item_query = Item.objects
+      set_query_hints(item_query, request.user.id)
+      item = item_query.get(id=id)
+      top_hits.append(item)
+
+  return render(request, 'renting_app/home.html', {
+    'item_list':top_hits, 
+    'user':request.user.first_name, 
+    'user_id': request.user.id, 
+    'query': query
+    }) 
 
 
 
