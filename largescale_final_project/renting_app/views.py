@@ -17,7 +17,7 @@ def set_query_hints(query, user_id):
   if query._hints == None:
     query._hints = {'user_id' : user_id}
   else:
-    query._hints['user_id'] = user_id
+    query._hints['user_id'] = user_id 
 
 
 #Index for users who are not logged in
@@ -65,14 +65,14 @@ def register(request):
       profile_form = ProfileForm(request.POST,instance=profile_instance)
       if profile_form.is_valid():
         profile_form.save()
-
+  
       user = authenticate(username=new_user.username, password=user_form.clean_password2())
       if user is not None:
         login(request, user)
         return home(request)
 
     else:
-
+      
       return render(request, 'renting_app/register.html',{
         'user_form': user_form,
         'profile_form': ProfileForm,
@@ -83,12 +83,12 @@ def register(request):
   else:
    user_form = ExtendedUserCreationForm
    profile_form = ProfileForm
-
+  
   return render(request, 'renting_app/register.html', {
     'user_form': user_form,
     'profile_form': profile_form,
-    'user_id': request.user.id
-  })
+    'user_id': request.user.id  
+  }) 
 
 def user_login(request):
   #If already logged in just redirect to home page
@@ -107,7 +107,7 @@ def user_login(request):
     'auth_form': auth_form,
     'user_id': request.user.id
   })
-
+  
 def user_logout(request):
   logout(request)
   return HttpResponseRedirect('/renting_app/')
@@ -134,7 +134,7 @@ def profile(request, user_id):
     posts = paginator.page(page)
   except PageNotAnInteger:
     # If page is not an integer, deliver first page.
-    posts = paginator.page(1)
+    posts = paginator.page(1) 
   except EmptyPage:
     # If page is out of range (e.g. 9999), deliver last page of results.
     posts = paginator.page(paginator.num_pages)
@@ -142,11 +142,11 @@ def profile(request, user_id):
   my_profile = False
   if int(request.user.id) == int(user_id):
     my_profile = True
-
+ 
 
 
   context = {
-
+    
     'user' : user,
     'email' : profile.email,
     'first_name' : profile.first_name,
@@ -155,7 +155,7 @@ def profile(request, user_id):
     'posts' : posts,
     'user_id': request.user.id,
     'my_profile': my_profile
-
+    
   }
   return render(request, 'renting_app/profile.html', context)
 
@@ -163,8 +163,8 @@ def profile(request, user_id):
 def add(request):
   if request.method == 'POST':
     item_form = ItemForm(request.POST)
-
-    #TODO: can't call item_form.is_valid due to sharding errors, due manual validation
+    
+    #TODO: can't call item_form.is_valid due to sharding errors, due manual validation    
     new_item = item_form.save(commit=False)
     new_item.user_id = request.user.id
     new_item.currently_rented = False
@@ -175,11 +175,11 @@ def add(request):
 
   else:
    item_form = ItemForm
-
+  
   return render(request, 'renting_app/add.html', {
     'item_form': item_form,
-    'user_id': request.user.id
-  })
+    'user_id': request.user.id  
+  }) 
 
 @login_required
 def modify(request):
@@ -187,7 +187,7 @@ def modify(request):
     delete = request.POST.getlist('delete')
     rented = request.POST.getlist('rented')
     returned = request.POST.getlist('returned')
-
+    
     for rent_id in returned:
       item = Item.objects.get(id=rent_id)
       item.currently_rented = False
@@ -215,7 +215,6 @@ def item(request, user_id, item_id):
   if (request.user.id == item_user.user_id):
     show_email_form = False
   context = {
-
   'item' : item, 
   'user_id': request.user.id, 
   "item_user": item_user,
@@ -230,7 +229,7 @@ def item(request, user_id, item_id):
     message = request.POST.get('message')
     item = request.POST.get('item')
     title = 'New Message about your ' + str(item)
-
+    
     email = EmailMessage(
       title,
       message,
@@ -239,11 +238,11 @@ def item(request, user_id, item_id):
       reply_to=[email_addr]
     )
     email.send()
-
     context['message'] = "Your message has been emailed."  
 
   
   return render(request, 'renting_app/item.html', context)
+
 
 
 

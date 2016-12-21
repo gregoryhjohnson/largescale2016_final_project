@@ -3,7 +3,7 @@
 """
 
 import os
-
+from largescale_final_project.secrets import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,9 +15,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
-ALLOWED_HOSTS = ['renting.us-east-1.elasticbeanstalk.com', '127.0.0.1', '172.31.60.1']
-
+ALLOWED_HOSTS = ['renting.us-east-1.elasticbeanstalk.com', '127.0.0.1']
 
 
 # Application definition
@@ -96,8 +94,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-##secrets
-from rds.secrets import *
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
