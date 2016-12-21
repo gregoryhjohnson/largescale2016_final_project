@@ -271,6 +271,7 @@ def search(request):
       item_query = Item.objects
       set_query_hints(item_query, request.user.id)
       item = item_query.get(id=id)
+      item.user = Profile.objects.get(pk=item.user_id)
       top_hits.append(item)
 
   return render(request, 'renting_app/home.html', {
