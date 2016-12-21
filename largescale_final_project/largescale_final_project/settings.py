@@ -12,8 +12,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['renting.us-east-1.elasticbeanstalk.com', '127.0.0.1', '172.31.60.1']
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+
+
+>>>>>>> 25e298d96ce2ccf38bf2d0193dba9fda1d88b568
 # Application definition
 
 INSTALLED_APPS = [
