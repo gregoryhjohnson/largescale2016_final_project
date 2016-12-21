@@ -218,9 +218,8 @@ def item(request, user_id, item_id):
   if (request.user.id == item_user.user_id):
     show_email_form = False
   context = {
-
-  'item' : item, 
-  'user_id': request.user.id, 
+  'item' : item,
+  'user_id': request.user.id,
   "item_user": item_user,
   "show_email_form" : show_email_form
   }
@@ -242,12 +241,10 @@ def item(request, user_id, item_id):
       reply_to=[email_addr]
     )
     email.send()
+    context['message'] = "Your message has been emailed."
 
-    context['message'] = "Your message has been emailed."  
 
-  
   return render(request, 'renting_app/item.html', context)
-<<<<<<< HEAD
 
   @login_required
 def search(request):
@@ -266,9 +263,3 @@ def search(request):
       top_hits.append(item)
 
   return render(request, 'renting_app/home.html', {'item_list':top_hits, 'user':request.user.first_name, 'query': query})
-||||||| merged common ancestors
-=======
-
-
-
->>>>>>> 25e298d96ce2ccf38bf2d0193dba9fda1d88b568
