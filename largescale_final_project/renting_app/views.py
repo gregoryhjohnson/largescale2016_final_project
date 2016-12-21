@@ -215,8 +215,9 @@ def item(request, user_id, item_id):
   if (request.user.id == item_user.user_id):
     show_email_form = False
   context = {
-  'item' : item,
-  'user_id': request.user.id,
+
+  'item' : item, 
+  'user_id': request.user.id, 
   "item_user": item_user,
   "show_email_form" : show_email_form
   }
@@ -238,7 +239,11 @@ def item(request, user_id, item_id):
       reply_to=[email_addr]
     )
     email.send()
-    context['message'] = "Your message has been emailed."
 
+    context['message'] = "Your message has been emailed."  
 
+  
   return render(request, 'renting_app/item.html', context)
+
+
+
