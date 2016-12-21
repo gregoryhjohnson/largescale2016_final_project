@@ -9,7 +9,7 @@ Hello, {{user}}<br><br>
   <div id="item_list">
     {% for item in item_list %}
       <div class="item">
-      <h3><bold> 
+      <h3><bold>
           <a href="{% url 'item' item.user_id item.id %}">
           {{ item.name }}
           </a>

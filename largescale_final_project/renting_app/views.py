@@ -228,8 +228,8 @@ def item(request, user_id, item_id):
     show_email_form = False
   context = {
 
-  'item' : item, 
-  'user_id': request.user.id, 
+  'item' : item,
+  'user_id': request.user.id,
   "item_user": item_user,
   "show_email_form" : show_email_form
   }
@@ -252,9 +252,9 @@ def item(request, user_id, item_id):
     )
     email.send()
 
-    context['message'] = "Your message has been emailed."  
+    context['message'] = "Your message has been emailed."
 
-  
+
   return render(request, 'renting_app/item.html', context)
 
 @login_required
@@ -275,11 +275,8 @@ def search(request):
       top_hits.append(item)
 
   return render(request, 'renting_app/home.html', {
-    'item_list':top_hits, 
-    'user':request.user.first_name, 
-    'user_id': request.user.id, 
+    'item_list':top_hits,
+    'user':request.user.first_name,
+    'user_id': request.user.id,
     'query': query
-    }) 
-
-
-
+    })

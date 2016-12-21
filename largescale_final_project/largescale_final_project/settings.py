@@ -1,13 +1,10 @@
 """
     basic settings
 """
-
 import os
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -15,10 +12,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 ALLOWED_HOSTS = ['renting.us-east-1.elasticbeanstalk.com', '127.0.0.1', '172.31.60.1']
-
-
 
 # Application definition
 
@@ -62,8 +56,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'largescale_final_project.wsgi.application'
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -81,7 +73,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
@@ -105,7 +96,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/renting_app/login'
-
 
 EMAIL_USE_TLS = True
 

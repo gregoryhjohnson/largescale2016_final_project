@@ -15,7 +15,7 @@ Zip code: {{zip_code}}
 {% csrf_token %}
 {% for item in posts %}
   <div class="item">
-      <h3><bold> 
+      <h3><bold>
           <a href="{% url 'item' item.user_id item.id %}">
           {{ item.name }}
           </a>
@@ -23,7 +23,7 @@ Zip code: {{zip_code}}
       <h4>Category: {{ item.category.name }}</h4>
           <p>Description: {{ item.description }}</p>
           <p>Rate per day: ${{ item.asking_price }}</p>
-        
+
           {% if item.currently_rented %}
           <h4 style="color:red">Item is currently being rented</h4><hr>
           <input type="checkbox" value="{{item.id}}" name="returned">Item was returned<br>
@@ -31,12 +31,12 @@ Zip code: {{zip_code}}
           {% else %}
           {% if my_profile %}
           <hr>
-          
-          <input type="checkbox" value="{{item.id}}" name="rented">Mark as currently being rented<br> 
+
+          <input type="checkbox" value="{{item.id}}" name="rented">Mark as currently being rented<br>
           <input type="checkbox" value="{{item.id}}" name="delete">  Delete listing
           {% endif %}
           {% endif %}
-          
+
 
       </div>
 {% endfor %}
@@ -44,7 +44,7 @@ Zip code: {{zip_code}}
 <br>
 {% if my_profile %}
 {% if posts %}
-<button type="reset" class="btn pull-right">Reset</button>   
+<button type="reset" class="btn pull-right">Reset</button>
 <button type="submit" class="btn btn-primary pull-right">Apply</button>
 {% endif %}
 {% endif %}

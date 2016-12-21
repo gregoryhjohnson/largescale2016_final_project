@@ -17,3 +17,6 @@ class ItemForm(forms.ModelForm):
 	class Meta:
 		model = Item
 		fields = ['name', 'category', 'description', 'asking_price']
+
+class SearchForm(forms.Form):
+  searched = forms.CharField(label='Search term', max_length=100)
