@@ -1,0 +1,115 @@
+{
+  "objects": [
+    {
+      "database": {
+        "ref": "rds_mysql"
+      },
+      "name": "SourceRDSTable",
+      "id": "SourceRDSTable",
+      "type": "SqlDataNode",
+      "table": "#{myRDSTableName}",
+      "selectQuery": "select * from #{table}"
+    },
+    {
+      "instanceType": "#{myEC2InstanceType}",
+      "name": "Ec2Instance",
+      "actionOnTaskFailure": "terminate",
+      "securityGroups": "#{myEc2RdsSecurityGrps}",
+      "id": "Ec2Instance",
+      "type": "Ec2Resource",
+      "terminateAfter": "2 Hours"
+    },
+    {
+      "output": {
+        "ref": "S3OutputLocation"
+      },
+      "input": {
+        "ref": "SourceRDSTable"
+      },
+      "name": "RDStoS3CopyActivity",
+      "runsOn": {
+        "ref": "Ec2Instance"
+      },
+      "id": "RDStoS3CopyActivity",
+      "type": "CopyActivity"
+    },
+    {
+      "directoryPath": "#{myOutputS3Loc}/#{format(@scheduledStartTime, 'YYYY-MM-dd-HH-mm-ss')}",
+      "name": "S3OutputLocation",
+      "id": "S3OutputLocation",
+      "type": "S3DataNode"
+    },
+    {
+      "databaseName": "rental_app",
+      "*password": "#{*myRDSPassword}",
+      "name": "rds_mysql",
+      "jdbcProperties": "allowMultiQueries=true",
+      "id": "rds_mysql",
+      "type": "RdsDatabase",
+      "rdsInstanceId": "#{myRDSInstanceId}",
+      "username": "#{myRDSUsername}"
+    },
+    {
+      "failureAndRerunMode": "CASCADE",
+      "resourceRole": "DataPipelineDefaultResourceRole",
+      "role": "DataPipelineDefaultRole",
+      "pipelineLogUri": "s3://www.anhadarora.com/",
+      "scheduleType": "ONDEMAND",
+      "name": "Default",
+      "id": "Default"
+    }
+  ],
+  "parameters": [
+    {
+      "description": "RDS MySQL password",
+      "id": "*myRDSPassword",
+      "type": "String"
+    },
+    {
+      "description": "Output S3 folder",
+      "id": "myOutputS3Loc",
+      "type": "AWS::S3::ObjectKey"
+    },
+    {
+      "description": "RDS MySQL username",
+      "id": "myRDSUsername",
+      "type": "String"
+    },
+    {
+      "helpText": "The name of an existing table or a new table that will be created based on the Create table SQL query parameter below.",
+      "description": "RDS MySQL table name",
+      "id": "myRDSTableName",
+      "type": "String"
+    },
+    {
+      "watermark": "security group name",
+      "helpText": "The names of one or more EC2 security groups that have access to the RDS cluster.",
+      "description": "Ec2 Security group(s)",
+      "isArray": "true",
+      "optional": "true",
+      "id": "myEc2RdsSecurityGrps",
+      "type": "String"
+    },
+    {
+      "default": "t1.micro",
+      "helpText": "The type of the EC2 instance that will be launched on your behalf to do the copy",
+      "description": "EC2 instance type",
+      "id": "myEC2InstanceType",
+      "type": "String"
+    },
+    {
+      "watermark": "DB Instance",
+      "description": "RDS Instance ID",
+      "id": "myRDSInstanceId",
+      "type": "String"
+    }
+  ],
+  "values": {
+    "myRDSInstanceId": "aap1nfbft5yzor",
+    "myRDSUsername": "appserver",
+    "myEC2InstanceType": "t1.micro",
+    "myOutputS3Loc": "s3://www.anhadarora.com/",
+    "*myRDSPassword": "foobarzoot",
+    "myRDSTableName": "renting_app_item"
+  }
+}
