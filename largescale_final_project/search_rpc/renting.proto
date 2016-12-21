@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+service WhooshSearch {
+
+  rpc Add(AddRequest) returns (AddReply){}
+  rpc Search(SearchRequest) returns (SearchReply){}
+  rpc Delete(DeleteRequest) returns (DeleteReply){}
+}
+
+message AddRequest {
+  int32 id = 1;
+  string item = 2;
+  string description = 3;
+}
+
+message AddReply {
+  string completed = 1;
+}
+
+message SearchRequest {
+  string query = 1;
+}
+
+message SearchReply {
+  repeated int32 hit_id = 1;
+}
+
+message DeleteRequest {
+  int32 id = 1;
+}
+
+message DeleteReply {
+  string completed = 1;
+}
