@@ -9,9 +9,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
 from .routers import get_num_physical_shards
 from django.core.mail import EmailMessage
-
-from renting_pb2 import *
+from . import renting_pb2
 import grpc
+
+# Create your views here.
+
 
 def set_query_hints(query, user_id):
   if query._hints == None:
@@ -169,6 +171,7 @@ def add(request):
     new_item.user_id = request.user.id
     new_item.currently_rented = False
     new_item.save()
+
     channel = grpc.insecure_channel('localhost:35000')
     stub = renting_pb2.WhooshSearchStub(channel)
     completed = stub.Add(renting_pb2.AddRequest(id=new_item.id, item=new_item.name, description=new_item.description))
@@ -201,6 +204,12 @@ def modify(request):
       item.save()
     for delete_id in delete:
       item = Item.objects.get(id=delete_id)
+
+      #change channel to whatever the server is running on
+      channel = grpc.insecure_channel('localhost:35000')
+      stub = renting_pb2.WhooshSearchStub(channel)
+      completed = stub.Delete(renting_pb2.DeleteRequest(id=int(delete_id)))
+
       item.delete()
     url = '/renting_app/profile/' + str(request.user.id)
     return HttpResponseRedirect(url)
@@ -218,8 +227,9 @@ def item(request, user_id, item_id):
   if (request.user.id == item_user.user_id):
     show_email_form = False
   context = {
-  'item' : item,
-  'user_id': request.user.id,
+
+  'item' : item, 
+  'user_id': request.user.id, 
   "item_user": item_user,
   "show_email_form" : show_email_form
   }
@@ -241,12 +251,13 @@ def item(request, user_id, item_id):
       reply_to=[email_addr]
     )
     email.send()
-    context['message'] = "Your message has been emailed."
 
+    context['message'] = "Your message has been emailed."  
 
+  
   return render(request, 'renting_app/item.html', context)
 
-  @login_required
+@login_required
 def search(request):
   query = request.GET.get('query')
   #change channel to whatever the server is running on
@@ -260,6 +271,15 @@ def search(request):
       item_query = Item.objects
       set_query_hints(item_query, request.user.id)
       item = item_query.get(id=id)
+      item.user = Profile.objects.get(pk=item.user_id)
       top_hits.append(item)
 
-  return render(request, 'renting_app/home.html', {'item_list':top_hits, 'user':request.user.first_name, 'query': query})
+  return render(request, 'renting_app/home.html', {
+    'item_list':top_hits, 
+    'user':request.user.first_name, 
+    'user_id': request.user.id, 
+    'query': query
+    }) 
+
+
+

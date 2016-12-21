@@ -23,13 +23,15 @@
           <form action="" method="post" id="request-form">
           {% csrf_token %}
           <input value="{{ item.name }}" name="item" id="item" hidden>
-          Your email:
+
+          Your email: 
           <input type="email" id="email" name="email">
           <small>Leave blank to use email registered with.</small>
+          
+          <br><br> 
+          
+            Message: 
 
-          <br><br>
-
-            Message:
             <textarea name="message" id="message" required></textarea>
           <br><br>
           <button type="submit" class="btn btn-primary">Send</button>
@@ -41,3 +43,4 @@
   {% endif %}
 </div>
 {% endblock %}
+
