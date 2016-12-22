@@ -8,4 +8,5 @@ A user can also view their own profile by clicking on the “My Profile” butto
 
 On the home page, users can search for specific items they are interested in by the item’s name and description. The search is implemented with an RPC and Whoosh for Python. 
 
+(Screenshots/search-bike)
 
